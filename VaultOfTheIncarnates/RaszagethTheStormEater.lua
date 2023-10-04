@@ -179,8 +179,8 @@ end
 --
 
 local staticChargeMarker = mod:AddMarkerOption(false, "player", 1, 381615, 1, 2, 3) -- Static Charge
-local stormseekerAcolyteLeft = mod:AddMarkerOption(false, "npc", 8, -25641, 8, 7, 6) -- Stormseeker Acolyte
-local stormseekerAcolyteRight = mod:AddMarkerOption(false, "npc", 4, 219878, 5, 4, 3) -- Acolyte // Seperate spellId since there is no support for using the same one twice.
+local stormseekerAcolyteLeftMarker = mod:AddMarkerOption(false, "npc", 8, -25641, 8, 7, 6) -- Stormseeker Acolyte
+local stormseekerAcolyteRightMarker = mod:AddMarkerOption(false, "npc", 4, 219878, 5, 4, 3) -- Acolyte // Seperate spellId since there is no support for using the same one twice.
 local fulminatingChargeMarker = mod:AddMarkerOption(false, "player", 1, 377467, 1, 2, 3) -- Fulminating Charge
 local magneticChargeMarker = mod:AddMarkerOption(false, "player", 4, 399713, 4) -- Magnetic Charge
 function mod:GetOptions()
@@ -202,8 +202,8 @@ function mod:GetOptions()
 		"custom_off_raidleader_devastation",
 		{396037, "SAY", "SAY_COUNTDOWN"}, -- Surging Blast
 		385553, -- Storm Bolt
-		stormseekerAcolyteLeft,
-		stormseekerAcolyteRight,
+		stormseekerAcolyteLeftMarker,
+		stormseekerAcolyteRightMarker,
 		397382, -- Shattering Shroud
 		397387, -- Flame Shield
 		-- Stage Two: Surging Power
@@ -244,8 +244,8 @@ function mod:GetOptions()
 		[388643] = L.volatile_current, -- Volatile Current (Sparks)
 		[386410] = L.thunderous_blast, -- Thunderous Blast (Blast)
 		[377594] = L.lightning_breath, -- Lightning Breath (Breath)
-		[376126] = L.lightning_strikes, -- Lightning Strikes (Strikes)
-		[381249] = L.electric_scales, -- Electric Scaless (Raid Damage)
+		-- [376126] = L.lightning_strikes, -- Lightning Strikes (Strikes)
+		-- [381249] = L.electric_scales, -- Electric Scaless (Raid Damage)
 		[381251] = L.electric_lash, -- Lightning Strikes (Lash)
 		-- Intermission: The Primalist Strike
 		[385065] = L.lightning_devastation, -- Lightning Devastation (Breath)
@@ -394,21 +394,21 @@ function mod:AddMarking(_, unit, guid)
 	if guid and not mobCollector[guid] and self:MobId(guid) == 194990 then -- Stormseeker Acolyte
 		local inRange = IsItemInRange(41058, unit) -- Hyldnir Harpoon, 100y
 		if inRange then
-			if self:GetOption(stormseekerAcolyteLeft) then
+			if self:GetOption(stormseekerAcolyteLeftMarker) then
 				for i = 8, 6, -1 do -- 8, 7, 6
 					if not marksUsed[i] then
 						mobCollector[guid] = true
 						marksUsed[i] = guid
-						self:CustomIcon(stormseekerAcolyteLeft, unit, i)
+						self:CustomIcon(stormseekerAcolyteLeftMarker, unit, i)
 						return
 					end
 				end
-			elseif self:GetOption(stormseekerAcolyteRight) then
+			elseif self:GetOption(stormseekerAcolyteRightMarker) then
 				for i = 5, 3, -1 do -- 5, 4, 3
 					if not marksUsed[i] then
 						mobCollector[guid] = true
 						marksUsed[i] = guid
-						self:CustomIcon(stormseekerAcolyteRight, unit, i)
+						self:CustomIcon(stormseekerAcolyteRightMarker, unit, i)
 						return
 					end
 				end
@@ -419,7 +419,7 @@ end
 
 function mod:IntermissionAddDeaths(args)
 	if args.mobId == 194990 then -- Stormseeker Acolyte
-		if self:GetOption(stormseekerAcolyteLeft) or self:GetOption(stormseekerAcolyteRight) then
+		if self:GetOption(stormseekerAcolyteLeftMarker) or self:GetOption(stormseekerAcolyteRightMarker) then
 			for i = 8, 3, -1 do -- 8 -> 3
 				if marksUsed[i] == args.destGUID then
 					marksUsed[i] = nil
@@ -634,7 +634,7 @@ function mod:StormNovaSuccess(args)
 	otherSideBreath = 1
 	self:Bar(385065, 12.5, CL.count:format(L.lightning_devastation, lightningDevastationCount)) -- Time to Storm Jump (snap position), does the breath still change?
 	checkTimer = mod:ScheduleTimer("PlatformBreathCheck", 13.5, lightningDevastationCount)
-	if self:GetOption(stormseekerAcolyteLeft) or self:GetOption(stormseekerAcolyteRight) then
+	if self:GetOption(stormseekerAcolyteLeftMarker) or self:GetOption(stormseekerAcolyteRightMarker) then
 		self:RegisterTargetEvents("AddMarking")
 		marksUsed = {}
 	end
