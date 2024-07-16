@@ -302,6 +302,8 @@ function boss:GetAllowWin()
 	return self.allowWin and true or false
 end
 
+---- Register private auras.
+--- @param opts the options table
 function boss:SetPrivateAuraSounds(opts)
 	for i = 1, #opts do
 		if type(opts[i]) ~= "table" then

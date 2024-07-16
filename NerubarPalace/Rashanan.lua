@@ -11,8 +11,8 @@ mod:SetEncounterID(2918)
 mod:SetRespawnTime(30)
 mod:SetPrivateAuraSounds({
 	439790, -- Rolling Acid
-	{439815, extra = {455284}}, -- Infested Spawn
-	{439783, extra = {434090}}, -- Spinneret's Strands (XXX are both used?)
+	{439815, 455284}, -- Infested Spawn
+	{439783, 434090}, -- Spinneret's Strands (XXX are both used?)
 })
 
 --------------------------------------------------------------------------------
